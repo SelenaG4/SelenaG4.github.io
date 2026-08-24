@@ -53,6 +53,7 @@
     transition: background 0.15s ease;
   }
   .link-row a:hover { background: rgba(255,255,255,0.26); }
+  .link-row a.copied { background: rgba(12,163,12,0.35); border-color: rgba(12,163,12,0.6); }
 
   /* Section chrome */
   main { padding: 48px 0 80px; }
@@ -162,6 +163,7 @@
     text-align: center; padding: 32px 0 48px; color: var(--ink-muted); font-size: 13px;
   }
   footer a { color: var(--accent); }
+  footer a.copied { color: var(--good); font-weight: 600; }
 
   /* Top skills quick row */
   .top-skills { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
@@ -194,6 +196,7 @@
     min-width: 18px; height: 18px; border-radius: 999px;
     display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0;
   }
+  .filter-badge[hidden] { display: none; }
 
   /* Static in-flow panel: pushes the project grid down instead of floating over it */
   .filter-dropdown {
@@ -258,7 +261,7 @@
       <div class="link-row">
         <a href="https://www.linkedin.com/in/selenanguyen" target="_blank" rel="noopener">LinkedIn</a>
         <a href="https://github.com/SelenaG4" target="_blank" rel="noopener">GitHub</a>
-        <a href="mailto:Selena.nguyen.ch25@gmail.com">Email</a>
+        <a href="mailto:Selena.nguyen.ch25@gmail.com" class="email-link">Email</a>
       </div>
     </div>
   </div>
@@ -496,7 +499,7 @@
 
 <footer>
   <div class="wrap">
-    Selena Nguyen &nbsp;·&nbsp; <a href="mailto:Selena.nguyen.ch25@gmail.com">Selena.nguyen.ch25@gmail.com</a> &nbsp;·&nbsp; Luzern, Switzerland
+    Selena Nguyen &nbsp;·&nbsp; <a href="mailto:Selena.nguyen.ch25@gmail.com" class="email-link">Selena.nguyen.ch25@gmail.com</a> &nbsp;·&nbsp; Luzern, Switzerland
   </div>
 </footer>
 
@@ -568,6 +571,7 @@
       badge.textContent = String(count);
     } else {
       badge.hidden = true;
+      badge.textContent = '0';
     }
   }
 
@@ -634,6 +638,25 @@
   });
 
   applyFilters();
+
+  // Email links: let mailto: try to open a mail client as normal, but also
+  // copy the address to the clipboard so visitors with no configured mail
+  // app (common on work laptops) still walk away with something usable.
+  document.querySelectorAll('a.email-link').forEach(function (link) {
+    link.addEventListener('click', function () {
+      var email = link.getAttribute('href').replace(/^mailto:/, '');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).catch(function () {});
+      }
+      var original = link.textContent;
+      link.textContent = 'Copied!';
+      link.classList.add('copied');
+      setTimeout(function () {
+        link.textContent = original;
+        link.classList.remove('copied');
+      }, 1500);
+    });
+  });
 })();
 </script>
 
