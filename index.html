@@ -162,6 +162,89 @@
     text-align: center; padding: 32px 0 48px; color: var(--ink-muted); font-size: 13px;
   }
   footer a { color: var(--accent); }
+
+  /* Top skills quick row */
+  .top-skills { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .top-skills-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-muted); margin-right: 2px;
+  }
+
+  /* Search bar + filter dropdown */
+  .search-filter { position: relative; margin-bottom: 22px; }
+  .search-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+    padding: 12px 18px; cursor: pointer;
+    transition: border-color 0.15s ease, border-radius 0.15s ease;
+  }
+  .search-bar:hover { border-color: var(--accent-2); }
+  .search-bar.open { border-color: var(--accent-2); border-radius: 20px 20px 0 0; }
+  .search-icon, .chevron-icon { flex-shrink: 0; color: var(--ink-muted); }
+  .search-icon { width: 18px; height: 18px; }
+  .chevron-icon { width: 16px; height: 16px; transition: transform 0.15s ease; }
+  .search-bar.open .chevron-icon { transform: rotate(180deg); }
+  .search-bar input {
+    flex: 1; min-width: 0; border: none; outline: none; background: transparent;
+    font: inherit; font-size: 14px; color: var(--ink);
+  }
+  .search-bar input::placeholder { color: var(--ink-muted); }
+  .filter-badge {
+    background: var(--accent); color: white; font-size: 11px; font-weight: 700;
+    min-width: 18px; height: 18px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center; padding: 0 5px; flex-shrink: 0;
+  }
+
+  .filter-dropdown {
+    position: absolute; left: 0; right: 0; top: 100%; z-index: 20;
+    background: var(--surface); border: 1px solid var(--accent-2); border-top: 1px solid var(--border);
+    border-radius: 0 0 14px 14px; padding: 18px 20px 16px;
+    box-shadow: 0 14px 28px rgba(20,33,61,0.14);
+  }
+  .filter-dropdown[hidden] { display: none; }
+
+  .filter-group { margin-bottom: 14px; }
+  .filter-group:last-child { margin-bottom: 0; }
+  .filter-group .filter-label {
+    display: block;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-muted); margin-bottom: 8px;
+  }
+  .filter-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font: inherit; font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+    background: var(--page); border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 13px; cursor: pointer; transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .chip:hover { border-color: var(--accent-2); color: var(--accent); }
+  .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: white; }
+  .clear-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+  #filter-status { font-size: 12.5px; color: var(--ink-muted); }
+  .clear-btn {
+    font: inherit; font-size: 12.5px; font-weight: 600; color: var(--accent);
+    background: none; border: none; cursor: pointer; padding: 4px 0; text-decoration: underline;
+  }
+  .clear-btn:hover { color: var(--accent-2); }
+
+  /* Card tag badges */
+  .card .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .card .card-tags .tag {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.02em;
+    background: var(--accent-soft); color: var(--accent);
+    padding: 3px 9px; border-radius: 6px;
+  }
+  .card .card-tags .tag.tag-academy { background: rgba(202,138,4,0.10); color: #9a6700; }
+
+  .empty-state {
+    display: none;
+    text-align: center;
+    color: var(--ink-muted);
+    font-size: 14px;
+    padding: 32px 20px;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    grid-column: 1 / -1;
+  }
 </style>
 </head>
 <body>
@@ -185,50 +268,157 @@
 
   <section id="projects">
     <h2>Projects</h2>
-    <p class="section-intro">Four projects spanning production GenAI, classical ML, backend systems, and client-facing consulting delivery.</p>
+    <p class="section-intro">Four projects spanning production GenAI, classical ML, backend systems, and client-facing consulting delivery. Search or click the bar below to filter by project type, industry, skills, or impact.</p>
 
-    <div class="project-grid">
+    <div class="top-skills">
+      <span class="top-skills-label">Top skills</span>
+      <div class="filter-chips">
+        <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="UML">UML</button>
+        <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="Process Architecture">Process Architecture</button>
+        <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="ML">ML</button>
+        <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="Python">Python</button>
+        <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="SQL">SQL</button>
+      </div>
+    </div>
 
-      <div class="card">
+    <div class="search-filter" id="search-filter">
+      <div class="search-bar" id="search-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="filter-dropdown">
+        <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M9 3a6 6 0 104.472 10.03l3.749 3.75a.75.75 0 101.06-1.061l-3.749-3.75A6 6 0 009 3zM4.5 9a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0z" fill="currentColor"/></svg>
+        <input type="text" id="project-search" placeholder="Search projects, or click to filter…" autocomplete="off">
+        <span class="filter-badge" id="filter-badge" hidden>0</span>
+        <svg class="chevron-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="filter-dropdown" id="filter-dropdown" role="region" aria-label="Filter projects" hidden>
+        <div class="filter-group" data-group="type">
+          <span class="filter-label">Project type</span>
+          <div class="filter-chips">
+            <button type="button" class="chip" aria-pressed="false" data-group="type" data-value="Professional/Inspired">Professional / Inspired</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="type" data-value="Academy">Academy</button>
+          </div>
+        </div>
+        <div class="filter-group" data-group="industry">
+          <span class="filter-label">Industry</span>
+          <div class="filter-chips">
+            <button type="button" class="chip" aria-pressed="false" data-group="industry" data-value="Insurance">Insurance</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="industry" data-value="Financial Services">Financial Services</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="industry" data-value="Manufacturing">Manufacturing</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="industry" data-value="Retail & E-commerce">Retail &amp; E-commerce</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="industry" data-value="Healthcare & Wellbeing">Healthcare &amp; Wellbeing</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="industry" data-value="Consumer Tech">Consumer Tech</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="industry" data-value="Consulting">Consulting</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="industry" data-value="Nonprofit & Associations">Nonprofit &amp; Associations</button>
+          </div>
+        </div>
+        <div class="filter-group" data-group="skill">
+          <span class="filter-label">Skills &amp; tech stack</span>
+          <div class="filter-chips">
+            <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="Python">Python</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="SQL">SQL</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="ML">ML</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="UML">UML</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="Process Architecture">Process Architecture</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="FastAPI">FastAPI</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="scikit-learn">scikit-learn</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="TensorFlow/Keras">TensorFlow/Keras</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="SQLAlchemy">SQLAlchemy</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="SQLite">SQLite</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="Docker">Docker</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="skill" data-value="Azure OpenAI">Azure OpenAI</button>
+          </div>
+        </div>
+        <div class="filter-group" data-group="impact">
+          <span class="filter-label">Project impact</span>
+          <div class="filter-chips">
+            <button type="button" class="chip" aria-pressed="false" data-group="impact" data-value="Live & Deployed">Live &amp; Deployed</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="impact" data-value="Built & Tested">Built &amp; Tested</button>
+            <button type="button" class="chip" aria-pressed="false" data-group="impact" data-value="Real-Client Delivery">Real-Client Delivery</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="clear-row">
+        <p id="filter-status" aria-live="polite">Showing all 4 projects</p>
+        <button type="button" class="clear-btn" id="clear-filters">Clear filters</button>
+      </div>
+    </div>
+
+    <div class="project-grid" id="project-grid">
+
+      <div class="card"
+           data-type="Professional/Inspired"
+           data-industry="Insurance,Financial Services"
+           data-skill="Python,FastAPI,scikit-learn,Docker,ML"
+           data-impact="Live & Deployed">
         <div class="kicker">GenAI · Multilingual · Microservice</div>
         <h3>Swiss Claims &amp; Compliance Assistant</h3>
         <p class="desc">Multilingual (DE/FR/EN) claims-triage microservice for the Swiss insurance market: PII redaction, OCR invoice extraction, cross-lingual policy RAG, and an ML risk classifier that auto-approves or flags claims for a human adjuster.</p>
         <div class="stack">Python · FastAPI · scikit-learn · pytesseract · Docker</div>
+        <div class="card-tags">
+          <span class="tag">Professional / Inspired</span>
+          <span class="tag">Live &amp; Deployed</span>
+        </div>
         <div class="card-links">
           <a class="primary" href="https://swiss-claims-assistant.onrender.com/" target="_blank" rel="noopener">Live demo</a>
           <a href="https://github.com/SelenaG4/swiss-claims-assistant" target="_blank" rel="noopener">GitHub</a>
         </div>
       </div>
 
-      <div class="card">
+      <div class="card"
+           data-type="Professional/Inspired"
+           data-industry="Manufacturing,Retail & E-commerce"
+           data-skill="Python,FastAPI,SQLAlchemy,SQLite,Docker,SQL,Process Architecture"
+           data-impact="Built & Tested">
         <div class="kicker">ERP/CRM · Backend</div>
         <h3>Bedding Franchise ERP/CRM</h3>
         <p class="desc">Unified production, multi-channel sales, and accounting for a bedding manufacturer into one atomic system of record, replacing siloed spreadsheets across 6 real-world distribution channels.</p>
         <div class="stack">Python · FastAPI · SQLAlchemy · SQLite · Docker</div>
+        <div class="card-tags">
+          <span class="tag">Professional / Inspired</span>
+          <span class="tag">Built &amp; Tested</span>
+        </div>
         <div class="card-links">
           <a href="https://github.com/SelenaG4/bedding-franchise-erp" target="_blank" rel="noopener">GitHub</a>
         </div>
       </div>
 
-      <div class="card">
+      <div class="card"
+           data-type="Professional/Inspired"
+           data-industry="Healthcare & Wellbeing,Consumer Tech"
+           data-skill="Python,TensorFlow/Keras,FastAPI,scikit-learn,Azure OpenAI,ML"
+           data-impact="Built & Tested">
         <div class="kicker">Computer Vision · GenAI/RAG</div>
         <h3>Emotion Insight Assistant</h3>
         <p class="desc">Facial-emotion CNN (77.3% test accuracy, reconstructed from a completed MIT capstone) paired with a retrieval-augmented GenAI layer that turns per-frame detections into grounded, natural-language summaries.</p>
         <div class="stack">TensorFlow/Keras · FastAPI · scikit-learn · Azure OpenAI</div>
+        <div class="card-tags">
+          <span class="tag">Professional / Inspired</span>
+          <span class="tag">Built &amp; Tested</span>
+        </div>
         <div class="card-links">
           <a href="https://github.com/SelenaG4/Emotion_Insight_Assistant" target="_blank" rel="noopener">GitHub</a>
         </div>
       </div>
 
-      <div class="card">
+      <div class="card"
+           data-type="Academy"
+           data-industry="Consulting,Nonprofit & Associations"
+           data-skill="UML,Process Architecture"
+           data-impact="Real-Client Delivery">
         <div class="kicker">Consulting · Real Client</div>
         <h3>TechVista Consultancy</h3>
         <p class="desc">Real-client documentation strategy engagement for Ansen Innovation and its client FCMA, delivered as part of a 5-person consulting team during my Master of Information Systems.</p>
         <div class="stack">BPM · APQC · UML · Stakeholder Research</div>
+        <div class="card-tags">
+          <span class="tag tag-academy">Academy</span>
+          <span class="tag">Real-Client Delivery</span>
+        </div>
         <div class="card-links">
           <a class="primary" href="#techvista-case-study">View case study ↓</a>
         </div>
       </div>
+
+      <p class="empty-state" id="empty-state">No projects match this combination of filters. <button type="button" class="clear-btn" id="clear-filters-inline">Clear filters</button> to see everything again.</p>
 
     </div>
   </section>
@@ -309,6 +499,143 @@
     Selena Nguyen &nbsp;·&nbsp; <a href="mailto:Selena.nguyen.ch25@gmail.com">Selena.nguyen.ch25@gmail.com</a> &nbsp;·&nbsp; Luzern, Switzerland
   </div>
 </footer>
+
+<script>
+(function () {
+  var grid = document.getElementById('project-grid');
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.card'));
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.chip[data-group]'));
+  var statusEl = document.getElementById('filter-status');
+  var emptyState = document.getElementById('empty-state');
+  var badge = document.getElementById('filter-badge');
+  var totalCount = cards.length;
+
+  var searchFilter = document.getElementById('search-filter');
+  var searchBar = document.getElementById('search-trigger');
+  var searchInput = document.getElementById('project-search');
+  var dropdown = document.getElementById('filter-dropdown');
+
+  // active[group] = Set of selected values for that group
+  var active = { type: new Set(), industry: new Set(), skill: new Set(), impact: new Set() };
+  var groups = Object.keys(active);
+
+  function cardValues(card, group) {
+    var raw = card.getAttribute('data-' + group) || '';
+    return raw.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+  }
+
+  function matchesGroup(card, group) {
+    var selected = active[group];
+    if (selected.size === 0) return true; // no filter applied in this group
+    var values = cardValues(card, group);
+    for (var i = 0; i < values.length; i++) {
+      if (selected.has(values[i])) return true;
+    }
+    return false;
+  }
+
+  function matchesText(card) {
+    var q = searchInput.value.trim().toLowerCase();
+    if (!q) return true;
+    return card.textContent.toLowerCase().indexOf(q) !== -1;
+  }
+
+  function activeCount() {
+    return groups.reduce(function (sum, g) { return sum + active[g].size; }, 0);
+  }
+
+  function applyFilters() {
+    var visible = 0;
+    cards.forEach(function (card) {
+      var show = matchesText(card) && groups.every(function (group) {
+        return matchesGroup(card, group);
+      });
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    var hasQuery = searchInput.value.trim().length > 0;
+    var count = activeCount();
+    if (visible === totalCount && count === 0 && !hasQuery) {
+      statusEl.textContent = 'Showing all ' + totalCount + ' projects';
+    } else {
+      statusEl.textContent = 'Showing ' + visible + ' of ' + totalCount + ' projects';
+    }
+    emptyState.style.display = visible === 0 ? 'block' : 'none';
+
+    if (count > 0) {
+      badge.hidden = false;
+      badge.textContent = String(count);
+    } else {
+      badge.hidden = true;
+    }
+  }
+
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var group = chip.getAttribute('data-group');
+      var value = chip.getAttribute('data-value');
+      var nowActive = chip.getAttribute('aria-pressed') !== 'true';
+      if (nowActive) { active[group].add(value); } else { active[group].delete(value); }
+      // keep every chip representing this group+value in sync (top-skills row duplicates a dropdown chip)
+      chips.forEach(function (c) {
+        if (c.getAttribute('data-group') === group && c.getAttribute('data-value') === value) {
+          c.setAttribute('aria-pressed', String(nowActive));
+        }
+      });
+      applyFilters();
+    });
+  });
+
+  function clearAll() {
+    chips.forEach(function (chip) { chip.setAttribute('aria-pressed', 'false'); });
+    groups.forEach(function (g) { active[g].clear(); });
+    searchInput.value = '';
+    applyFilters();
+  }
+
+  document.getElementById('clear-filters').addEventListener('click', function (e) { e.stopPropagation(); clearAll(); });
+  document.getElementById('clear-filters-inline').addEventListener('click', clearAll);
+
+  // Search bar / dropdown open-close behavior
+  function openDropdown() {
+    dropdown.hidden = false;
+    searchBar.classList.add('open');
+    searchBar.setAttribute('aria-expanded', 'true');
+  }
+  function closeDropdown() {
+    dropdown.hidden = true;
+    searchBar.classList.remove('open');
+    searchBar.setAttribute('aria-expanded', 'false');
+  }
+
+  searchBar.addEventListener('click', function () {
+    if (dropdown.hidden) { openDropdown(); } else { closeDropdown(); }
+  });
+  searchBar.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (e.target === searchBar) {
+        e.preventDefault();
+        dropdown.hidden ? openDropdown() : closeDropdown();
+      }
+    }
+  });
+  searchInput.addEventListener('focus', openDropdown);
+  searchInput.addEventListener('click', function (e) { e.stopPropagation(); openDropdown(); });
+  searchInput.addEventListener('input', applyFilters);
+  dropdown.addEventListener('click', function (e) { e.stopPropagation(); });
+
+  document.addEventListener('click', function (e) {
+    if (!searchFilter.contains(e.target)) closeDropdown();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeDropdown();
+  });
+
+  applyFilters();
+})();
+</script>
 
 </body>
 </html>
