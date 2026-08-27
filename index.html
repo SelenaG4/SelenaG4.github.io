@@ -96,6 +96,14 @@
   .card .card-links a:hover { background: var(--accent-soft); }
   .card .card-links a.primary { background: var(--accent); color: white; border-color: var(--accent); }
   .card .card-links a.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+  .card .card-links button.case-trigger {
+    font: inherit; font-size: 13px; font-weight: 600; color: var(--accent);
+    background: none; cursor: pointer;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 7px;
+  }
+  .card .card-links button.case-trigger:hover { background: var(--accent-soft); }
+  .card .card-links button.case-trigger.primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .card .card-links button.case-trigger.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
 
   /* Case study */
   .case-study {
@@ -248,9 +256,104 @@
     border-radius: 12px;
     grid-column: 1 / -1;
   }
+
+  /* Visitor gate */
+  .gate-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: linear-gradient(135deg, var(--accent) 0%, #142b52 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .gate-overlay[hidden] { display: none; }
+  .gate-card {
+    background: var(--surface); border-radius: 16px;
+    max-width: 560px; width: 100%;
+    padding: 40px 36px 32px;
+    box-shadow: 0 20px 50px rgba(10,17,33,0.35);
+  }
+  @media (max-width: 560px) { .gate-card { padding: 30px 22px 24px; } }
+  .gate-eyebrow {
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent-2); margin: 0 0 14px;
+  }
+  .gate-step h2 { font-size: 21px; margin: 0 0 20px; color: var(--ink); }
+  .gate-options { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
+  .gate-option {
+    font: inherit; font-size: 14px; font-weight: 600; color: var(--ink-2);
+    background: var(--page); border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 12px 18px; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  }
+  .gate-option:hover { border-color: var(--accent-2); color: var(--accent); background: var(--accent-soft); }
+  .gate-skip {
+    font: inherit; font-size: 12.5px; font-weight: 600; color: var(--ink-muted);
+    background: none; border: none; cursor: pointer; padding: 4px 0; margin-top: 22px;
+    text-decoration: underline;
+  }
+  .gate-skip:hover { color: var(--accent); }
+
+  /* Viewing-as banner */
+  .viewing-as {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font-size: 12.5px; color: var(--ink-muted); margin-bottom: 14px;
+  }
+  .viewing-as strong { color: var(--ink-2); font-weight: 600; }
+  .viewing-as button {
+    font: inherit; font-size: 12.5px; font-weight: 600; color: var(--accent);
+    background: none; border: none; cursor: pointer; padding: 0; text-decoration: underline;
+  }
+  .viewing-as[hidden] { display: none; }
+
+  /* Inline project content (expand-in-place) */
+  .card.expanded { grid-column: 1 / -1; }
+  .project-grid.expanded-mode .card { display: none !important; }
+  .project-grid.expanded-mode .card.expanded { display: flex !important; }
+  .card-expanded-content { margin-top: 6px; }
+  .card-narrative-content { margin-top: 6px; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+  .subheading { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); margin: 0 0 16px; }
+  .back-row { margin-bottom: 16px; }
+  .back-row[hidden] { display: none; }
+  .back-btn {
+    font: inherit; font-size: 13px; font-weight: 600; color: var(--accent);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 14px; cursor: pointer;
+  }
+  .back-btn:hover { background: var(--accent-soft); }
+
 </style>
 </head>
 <body>
+<div id="gate-overlay" class="gate-overlay">
+  <div class="gate-card">
+    <p class="gate-eyebrow">Quick check — 2 questions</p>
+    <div class="gate-step" data-step="role">
+      <h2>What brings you here today?</h2>
+      <div class="gate-options" data-question="role">
+        <button type="button" class="gate-option" data-value="Recruiter">Recruiter</button>
+        <button type="button" class="gate-option" data-value="Client">Client</button>
+        <button type="button" class="gate-option" data-value="Other">Other</button>
+      </div>
+    </div>
+    <div class="gate-step" data-step="industry" hidden>
+      <h2>Which industry are you from?</h2>
+      <div class="gate-options" data-question="industry">
+        <button type="button" class="gate-option" data-value="Insurance">Insurance</button>
+        <button type="button" class="gate-option" data-value="Financial Services">Financial Services</button>
+        <button type="button" class="gate-option" data-value="Manufacturing">Manufacturing</button>
+        <button type="button" class="gate-option" data-value="Retail & E-commerce">Retail &amp; E-commerce</button>
+        <button type="button" class="gate-option" data-value="Healthcare & Wellbeing">Healthcare &amp; Wellbeing</button>
+        <button type="button" class="gate-option" data-value="Consumer Tech">Consumer Tech</button>
+        <button type="button" class="gate-option" data-value="Energy">Energy</button>
+        <button type="button" class="gate-option" data-value="Media & Publishing">Media &amp; Publishing</button>
+        <button type="button" class="gate-option" data-value="Consulting">Consulting</button>
+        <button type="button" class="gate-option" data-value="Nonprofit & Associations">Nonprofit &amp; Associations</button>
+        <button type="button" class="gate-option" data-value="Other">Other</button>
+      </div>
+    </div>
+    <button type="button" class="gate-skip" id="gate-skip">Skip — show me everything</button>
+  </div>
+</div>
+<div id="site-content" hidden>
 
 <header class="hero">
   <div class="wrap">
@@ -271,7 +374,11 @@
 
   <section id="projects">
     <h2>Projects</h2>
-    <p class="section-intro">Eleven projects spanning production GenAI &amp; RAG, computer vision, big-data streaming, forecasting &amp; optimization, classical ML, backend systems, and client-facing consulting — including a five-project smart-factory suite. Search or click the bar below to filter by project type, industry, skills, or impact.</p>
+    <div class="viewing-as" id="viewing-as" hidden>
+      <span id="viewing-as-text"></span>
+      <button type="button">Change</button>
+    </div>
+    <p class="section-intro" id="section-intro">Eleven projects spanning production GenAI &amp; RAG, computer vision, big-data streaming, forecasting &amp; optimization, classical ML, backend systems, and client-facing consulting — including a five-project smart-factory suite. Search or click the bar below to filter by project type, industry, skills, or impact.</p>
 
     <div class="top-skills">
       <span class="top-skills-label">Top skills</span>
@@ -360,9 +467,14 @@
       </div>
     </div>
 
+    <div class="back-row" id="back-row" hidden>
+      <button type="button" class="back-btn" id="back-to-projects-btn">&larr; Back to all projects</button>
+    </div>
+
     <div class="project-grid" id="project-grid">
 
       <div class="card"
+           data-project="factory-stream-monitor"
            data-type="Professional/Inspired"
            data-industry="Manufacturing"
            data-skill="Python,Big Data (Spark),Spark Streaming,Kafka,MLflow,GenAI & RAG,ML"
@@ -378,10 +490,12 @@
         <div class="card-links">
           <a class="primary" href="https://factory-stream-monitor.onrender.com" target="_blank" rel="noopener">Live demo</a>
           <a href="https://github.com/SelenaG4/factory-stream-monitor" target="_blank" rel="noopener">GitHub</a>
+          <button type="button" class="case-trigger" data-project="factory-stream-monitor">Project content</button>
         </div>
       </div>
 
       <div class="card"
+           data-project="factory-energy-optimizer"
            data-type="Professional/Inspired"
            data-industry="Manufacturing,Energy"
            data-skill="Python,Forecasting,Optimization,ML,MLflow,Streamlit"
@@ -397,10 +511,12 @@
         <div class="card-links">
           <a class="primary" href="https://factory-energy-optimizer.onrender.com" target="_blank" rel="noopener">Live demo</a>
           <a href="https://github.com/SelenaG4/factory-energy-optimizer" target="_blank" rel="noopener">GitHub</a>
+          <button type="button" class="case-trigger" data-project="factory-energy-optimizer">Project content</button>
         </div>
       </div>
 
       <div class="card"
+           data-project="manufacturing-maintenance-rag"
            data-type="Professional/Inspired"
            data-industry="Manufacturing"
            data-skill="Python,GenAI & RAG,NLP,MLflow,FastAPI"
@@ -416,10 +532,12 @@
         <div class="card-links">
           <a class="primary" href="https://manufacturing-maintenance-rag.onrender.com/" target="_blank" rel="noopener">Live demo</a>
           <a href="https://github.com/SelenaG4/manufacturing-maintenance-rag" target="_blank" rel="noopener">GitHub</a>
+          <button type="button" class="case-trigger" data-project="manufacturing-maintenance-rag">Project content</button>
         </div>
       </div>
 
       <div class="card"
+           data-project="factory-sensor-analytics"
            data-type="Professional/Inspired"
            data-industry="Manufacturing"
            data-skill="Python,Big Data (Spark),SQL,Streamlit"
@@ -435,10 +553,12 @@
         <div class="card-links">
           <a class="primary" href="https://factory-sensor-analytics.onrender.com" target="_blank" rel="noopener">Live demo</a>
           <a href="https://github.com/SelenaG4/factory-sensor-analytics" target="_blank" rel="noopener">GitHub</a>
+          <button type="button" class="case-trigger" data-project="factory-sensor-analytics">Project content</button>
         </div>
       </div>
 
       <div class="card"
+           data-project="surface-defect-inspector"
            data-type="Professional/Inspired"
            data-industry="Manufacturing"
            data-skill="Python,Computer Vision,PyTorch,ML,FastAPI"
@@ -454,10 +574,12 @@
         <div class="card-links">
           <a class="primary" href="https://surface-defect-inspector.onrender.com/" target="_blank" rel="noopener">Live demo</a>
           <a href="https://github.com/SelenaG4/surface-defect-inspector" target="_blank" rel="noopener">GitHub</a>
+          <button type="button" class="case-trigger" data-project="surface-defect-inspector">Project content</button>
         </div>
       </div>
 
       <div class="card"
+           data-project="swiss-claims-assistant"
            data-type="Professional/Inspired"
            data-industry="Insurance,Financial Services"
            data-skill="Python,FastAPI,scikit-learn,Docker,ML,GenAI & RAG,NLP"
@@ -473,10 +595,12 @@
         <div class="card-links">
           <a class="primary" href="https://swiss-claims-assistant.onrender.com/" target="_blank" rel="noopener">Live demo</a>
           <a href="https://github.com/SelenaG4/swiss-claims-assistant" target="_blank" rel="noopener">GitHub</a>
+          <button type="button" class="case-trigger" data-project="swiss-claims-assistant">Project content</button>
         </div>
       </div>
 
       <div class="card"
+           data-project="news-topic-classifier"
            data-type="Professional/Inspired"
            data-industry="Media & Publishing"
            data-skill="Python,NLP,Transformers,ML,MLflow,FastAPI"
@@ -492,10 +616,12 @@
         <div class="card-links">
           <a class="primary" href="https://news-topic-classifier-3szi.onrender.com/" target="_blank" rel="noopener">Live demo</a>
           <a href="https://github.com/SelenaG4/news-topic-classifier" target="_blank" rel="noopener">GitHub</a>
+          <button type="button" class="case-trigger" data-project="news-topic-classifier">Project content</button>
         </div>
       </div>
 
       <div class="card"
+           data-project="bedding-franchise-erp"
            data-type="Professional/Inspired"
            data-industry="Manufacturing,Retail & E-commerce"
            data-skill="Python,FastAPI,SQLAlchemy,SQLite,Docker,SQL,Process Architecture"
@@ -510,10 +636,12 @@
         </div>
         <div class="card-links">
           <a href="https://github.com/SelenaG4/bedding-franchise-erp" target="_blank" rel="noopener">GitHub</a>
+          <button type="button" class="case-trigger" data-project="bedding-franchise-erp">Project content</button>
         </div>
       </div>
 
       <div class="card"
+           data-project="emotion-insight-assistant"
            data-type="Professional/Inspired"
            data-industry="Healthcare & Wellbeing,Consumer Tech"
            data-skill="Python,TensorFlow/Keras,FastAPI,scikit-learn,Azure OpenAI,ML,Computer Vision,GenAI & RAG"
@@ -528,10 +656,12 @@
         </div>
         <div class="card-links">
           <a href="https://github.com/SelenaG4/Emotion_Insight_Assistant" target="_blank" rel="noopener">GitHub</a>
+          <button type="button" class="case-trigger" data-project="emotion-insight-assistant">Project content</button>
         </div>
       </div>
 
       <div class="card"
+           data-project="swiss-economic-timeseries"
            data-type="Professional/Inspired"
            data-industry="Financial Services"
            data-skill="Python,Forecasting,FastAPI,Docker"
@@ -546,10 +676,12 @@
         </div>
         <div class="card-links">
           <a href="https://github.com/SelenaG4/swiss-economic-timeseries" target="_blank" rel="noopener">GitHub</a>
+          <button type="button" class="case-trigger" data-project="swiss-economic-timeseries">Project content</button>
         </div>
       </div>
 
       <div class="card"
+           data-project="techvista-consultancy"
            data-type="Academy"
            data-industry="Consulting,Nonprofit & Associations"
            data-skill="UML,Process Architecture"
@@ -563,7 +695,7 @@
           <span class="tag">Real-Client Delivery</span>
         </div>
         <div class="card-links">
-          <a class="primary" href="#techvista-case-study">View case study ↓</a>
+          <button type="button" class="case-trigger primary" data-project="techvista-consultancy">View project content</button>
         </div>
       </div>
 
@@ -572,16 +704,21 @@
     </div>
   </section>
 
-  <section id="techvista-case-study">
-    <h2>Case Study</h2>
-    <div class="case-study">
-      <div class="case-header">
-        <div class="kicker">TechVista Consultancy — Group 9</div>
-        <h3>Documentation Strategy for a Real Client Engagement</h3>
-        <div class="meta">Client: Ansen Innovation (Melbourne digital transformation firm) &amp; its client, the Federation of Chinese Medicine &amp; Acupuncture Societies of Australia (FCMA) &nbsp;·&nbsp; University of Melbourne, Master of Information Systems &nbsp;·&nbsp; Semester 2, 2024 &nbsp;·&nbsp; 5-person team</div>
-      </div>
 
-      <p style="font-size:14.5px; color:var(--ink-2); margin-bottom:22px;">
+</main>
+
+<footer>
+  <div class="wrap">
+    Selena Nguyen &nbsp;·&nbsp; <a href="mailto:Selena.nguyen.ch25@gmail.com" class="email-link">Selena.nguyen.ch25@gmail.com</a> &nbsp;·&nbsp; Luzern, Switzerland
+  </div>
+</footer>
+
+</div><!-- /site-content -->
+
+<template id="narrative-techvista-consultancy">
+  <hr class="divider">
+  <p class="subheading">Full engagement narrative</p>
+<p style="font-size:14.5px; color:var(--ink-2); margin-bottom:22px;">
         Ansen Innovation had shipped five new features to its client FCMA's membership website but,
         under budget and deadline pressure, had no documentation and no long-term documentation
         strategy. TechVista Consultancy (my student consulting team, operating under the name for
@@ -638,16 +775,7 @@
         contribution — project management/coordination and the Component A documentation/process-
         modeling workstream — within a shared team deliverable.
       </div>
-    </div>
-  </section>
-
-</main>
-
-<footer>
-  <div class="wrap">
-    Selena Nguyen &nbsp;·&nbsp; <a href="mailto:Selena.nguyen.ch25@gmail.com" class="email-link">Selena.nguyen.ch25@gmail.com</a> &nbsp;·&nbsp; Luzern, Switzerland
-  </div>
-</footer>
+</template>
 
 <script>
 (function () {
@@ -803,6 +931,336 @@
       }, 1500);
     });
   });
+
+  // --- Project content (expand-in-place) ---
+  var caseStudies = {
+  "factory-stream-monitor": {
+    "problem": "Factories usually catch equipment failure only after a machine has already stopped, because sensor dashboards show raw numbers but nobody is watching all of them, all the time.",
+    "targetUser": "Maintenance and operations teams at mid-size manufacturers who don't have a dedicated real-time monitoring system.",
+    "competitors": [
+      "Enterprise IIoT platforms (Siemens MindSphere, PTC ThingWorx) — powerful but expensive and slow to configure",
+      "Static Grafana/Power BI dashboards — show data but don't score it or watch for drift",
+      "Manual shift-log spreadsheets"
+    ],
+    "insight": "The real failure isn't the alarm going off — it's that nobody catches a slow drift in \"normal-looking\" readings before it becomes an alarm. Watching the model's own accuracy for drift catches degradation earlier than a fixed threshold.",
+    "solution": "A streaming pipeline that scores every reading against a trained model in real time, monitors for data drift, and turns any alert into a plain-language incident report grounded in the maintenance knowledge base — not just a red light.",
+    "distribution": "A self-hosted Docker Compose stack (Kafka + Spark + dashboard) a plant's IT team runs on factory-floor infrastructure, or a managed version for factories that don't want to run their own Kafka cluster.",
+    "feedback": "Drift monitoring is the feedback loop itself — when live sensor patterns diverge from what the model was trained on, that's flagged automatically, prompting a retrain instead of letting accuracy silently decay."
+  },
+  "factory-energy-optimizer": {
+    "problem": "Factories pay peak-demand and time-of-use electricity charges without adjusting when flexible production actually runs, leaving real savings unclaimed.",
+    "targetUser": "Plant or energy managers on a time-of-use or demand-charge tariff who control some schedulable production load.",
+    "competitors": [
+      "Manual Excel-based shift planning",
+      "One-off demand-response consulting engagements",
+      "Enterprise energy-management suites with long procurement cycles"
+    ],
+    "insight": "A forecast alone doesn't save money — someone still has to decide what to shift and when. Pairing the forecast directly with a scheduling optimizer, then stress-testing that schedule, is what turns a chart into an actual decision.",
+    "solution": "Day-ahead demand forecasting feeds a mixed-integer optimizer that decides which shifts to run when, validated with a Monte-Carlo simulation so the plan is robust to a bad forecast day, not just theoretically cheaper.",
+    "distribution": "A dashboard a plant scheduler checks each morning, or an API that plugs into an existing production-scheduling tool rather than replacing it.",
+    "feedback": "Each day's actual demand versus forecast is logged and rolled into walk-forward retraining, so the forecast — and therefore the schedule — improves as real operating data accumulates."
+  },
+  "manufacturing-maintenance-rag": {
+    "problem": "Technicians lose time hunting through PDFs and binders for the right troubleshooting step, or guess, because the knowledge exists but isn't searchable in the moment they need it.",
+    "targetUser": "Maintenance technicians and reliability engineers on the factory floor, mid-repair.",
+    "competitors": [
+      "Keyword search over a shared drive or intranet",
+      "A generic chatbot (e.g. ChatGPT) that answers confidently but isn't grounded in the plant's manuals",
+      "Paying a specialist to write a new SOP each time"
+    ],
+    "insight": "In a maintenance context, a confident wrong answer is worse than no answer — so the real product decision was building a guardrail that says \"I don't have anything on that\" rather than always producing something.",
+    "solution": "A retrieval-augmented QA service that answers only from the plant's own maintenance guides, cites the passage it used, and is honest when nothing relevant is found — measured with a real retrieval-evaluation harness, not just a demo.",
+    "distribution": "A chat widget embedded in an existing maintenance-management system (CMMS), or a standalone tool on a shop-floor tablet.",
+    "feedback": "Every question that returns \"nothing relevant found\" is a signal the knowledge base has a real gap — reviewing those misses is how the corpus grows, not a one-time authoring exercise."
+  },
+  "factory-sensor-analytics": {
+    "problem": "A fleet of hundreds of machines generates far more sensor data than anyone can review by hand, so early signs of wear sit unused in log files.",
+    "targetUser": "Reliability engineers and operations leads managing a multi-site machine fleet.",
+    "competitors": [
+      "Vendor-specific machine dashboards that only cover that one vendor's equipment",
+      "Basic BI tools (Excel/Power BI) that struggle at true fleet scale",
+      "Hiring a data engineering team to build this in-house"
+    ],
+    "insight": "Most anomaly tools flag machines one at a time. The real value for a plant manager is comparing across the whole fleet — which sites, shifts, and machine types actually drive the anomaly rate — which only shows up once it's processed together.",
+    "solution": "A PySpark batch pipeline processes the full fleet's telemetry (rolling anomaly detection, uptime sessionization, fleet KPIs via Spark SQL) and reduces it to a small, fast dashboard, so no one has to run Spark themselves to see results.",
+    "distribution": "A scheduled batch job (nightly or hourly) writing to a lightweight serving layer, so it runs on existing data infrastructure without analysts needing to learn Spark.",
+    "feedback": "Control limits and anomaly thresholds are designed to be recalibrated as fleet history accumulates, rather than fixed once at launch, as the fleet's \"normal\" baseline becomes better understood."
+  },
+  "surface-defect-inspector": {
+    "problem": "Manual visual QC on a production line is slow, inconsistent between inspectors, and doesn't scale when line speed increases.",
+    "targetUser": "QC inspectors and line supervisors on a metal-fabrication or steel-processing line.",
+    "competitors": [
+      "Human visual inspection — the current default",
+      "Fixed-hardware industrial machine-vision systems with long install lead times",
+      "Generic cloud vision APIs not fine-tuned to a plant's specific defect types"
+    ],
+    "insight": "A classical computer-vision baseline was already surprisingly strong (97.1%) — the real product question wasn't \"can we detect defects\" but \"where exactly does the classical approach fail,\" which is what justified the deep-learning upgrade instead of assuming it was needed.",
+    "solution": "A defect classifier offered as two tiers — a fast classical baseline and a fine-tuned CNN for top accuracy — exported to ONNX so the accurate model still runs live without GPU infrastructure on the line.",
+    "distribution": "A lightweight service a line-side camera system posts images to over the local network, returning a pass/fail and defect type in near real time.",
+    "feedback": "Images inspectors flag as misclassified would feed a retraining set — the classical-vs-CNN structure makes it easy to see whether a new defect pattern needs the bigger model or is still caught by the cheap baseline."
+  },
+  "swiss-claims-assistant": {
+    "problem": "Claims adjusters spend time on manual, repetitive triage — reading invoices, checking policy language, deciding whether a claim needs a human — across three languages, which slows down simple claims and buries genuinely complex ones.",
+    "targetUser": "Claims adjusters and claims-operations managers at a Swiss, multilingual insurer.",
+    "competitors": [
+      "Existing claims-management suites (Guidewire, Duck Creek) that automate workflow but not language-aware document understanding",
+      "Outsourced manual triage teams",
+      "Single-language chatbot tools that don't handle DE/FR/EN policy documents well"
+    ],
+    "insight": "Swiss insurance is inherently multilingual, and most off-the-shelf claims tools are built English-first. The real gap was cross-lingual retrieval — a French question needs to correctly retrieve a German policy clause — a much harder problem than translation alone.",
+    "solution": "A microservice that redacts PII, extracts invoice data via OCR, answers policy questions across DE/FR/EN through language-aware retrieval, and uses a risk classifier to auto-approve routine claims or flag complex ones for a human adjuster.",
+    "distribution": "An internal API an insurer's existing claims platform calls, or a standalone triage step at claim intake before it reaches an adjuster's queue.",
+    "feedback": "Every claim routed to \"flag for adjuster,\" paired with the adjuster's actual decision, is exactly the labeled data needed to retrain and tighten the risk classifier's threshold over time."
+  },
+  "news-topic-classifier": {
+    "problem": "Publishers and aggregators need to route or tag large volumes of incoming articles by topic, and doing it by hand doesn't scale past a small newsroom.",
+    "targetUser": "Content and editorial-operations teams at a news aggregator or digital publisher.",
+    "competitors": [
+      "Rule-based keyword tagging, which breaks on new phrasing",
+      "Paying a large general-purpose LLM API per article — accurate but expensive at volume",
+      "Off-the-shelf classification APIs not tuned to a publisher's own topic taxonomy"
+    ],
+    "insight": "A from-scratch fine-tuned model isn't always worth the cost. The honest comparison here — baseline 90.5% versus fine-tuned 94.8% — is exactly the trade-off a real publisher has to make: is +4.3pp accuracy worth a transformer's extra serving cost over a cheap linear model.",
+    "solution": "Two models shown side by side — a fast, cheap baseline and a fine-tuned DistilBERT transformer — so a publisher can pick the accuracy/cost trade-off that fits their volume, rather than being locked into one option.",
+    "distribution": "A lightweight API a CMS or ingestion pipeline calls per article at publish time; the baseline model is light enough to run on the same free-tier infrastructure as the rest of the stack.",
+    "feedback": "Editor overrides of the auto-assigned topic are exactly the signal needed to fine-tune the classifier further on a publisher's specific taxonomy and house style over time."
+  },
+  "bedding-franchise-erp": {
+    "problem": "A manufacturer selling through six different channels was tracking orders, receivables, and fulfillment across siloed spreadsheets, with no single source of truth and no way to prevent a half-fulfilled order from existing.",
+    "targetUser": "Operations and finance staff at a small-to-mid-size manufacturer selling through multiple channels or franchisees.",
+    "competitors": [
+      "Generic spreadsheet tracking — the actual status quo",
+      "Large ERP suites (SAP, NetSuite) — accurate but expensive and slow to implement at this scale",
+      "Channel-specific point tools that don't talk to each other"
+    ],
+    "insight": "The hard part wasn't the data model — it was that each of the six channels has its own checkout rules and paperwork, so a single generic \"order\" object doesn't work. Channel-aware business rules had to be built in, not bolted on.",
+    "solution": "One system of record where each channel enforces its own checkout procedure, role-based access keeps each business account seeing only its own orders and receivables, and order processing is all-or-nothing so no half-fulfilled transaction can exist.",
+    "distribution": "Self-hosted via Docker on a manufacturer's own infrastructure — sized for a business too small for enterprise ERP pricing but past the point where spreadsheets are safe.",
+    "feedback": "Role-based access and clean order-state modeling make it straightforward to add a new channel's rules without touching the others — built to extend, not rebuild, as the business adds channels."
+  },
+  "emotion-insight-assistant": {
+    "problem": "Raw emotion-detection output — a label like \"angry\" per video frame — isn't useful to a non-technical reviewer on its own; someone still has to interpret dozens of per-frame labels into an actual insight.",
+    "targetUser": "Researchers, coaches, or wellbeing-app teams reviewing video for emotional or behavioral patterns without an ML background.",
+    "competitors": [
+      "Commercial affect-recognition APIs that return raw scores but not narrative summaries",
+      "Manual video review by a trained human coder — accurate but slow and doesn't scale"
+    ],
+    "insight": "The CNN's raw output isn't the product. Turning a stream of per-frame emotion labels into a grounded, readable summary is what actually makes the detection useful to someone who isn't going to read a CSV of predictions.",
+    "solution": "A facial-emotion CNN paired with a retrieval-augmented layer that turns per-frame detections into a natural-language summary of what happened across a clip, grounded in the actual detected data rather than a generic LLM guess.",
+    "distribution": "An API a video-review tool or research pipeline calls after processing footage, returning both the raw per-frame data and the readable summary.",
+    "feedback": "Reviewer corrections to a generated summary would be the signal to adjust either the CNN's confidence thresholds or the summarization prompt — a two-layer system means a bug can be isolated to detection or narration, not just \"the AI was wrong.\""
+  },
+  "swiss-economic-timeseries": {
+    "problem": "Analysts often reach for a sophisticated forecasting method by default without first checking whether a much simpler method would have done just as well, wasting effort and risking false confidence.",
+    "targetUser": "Analysts or small finance teams who need a quick, defensible macro forecast without a dedicated data science team.",
+    "competitors": [
+      "Bloomberg/Refinitiv terminal forecasts — accurate but expensive and closed",
+      "Generic \"AI forecasting\" tools that don't disclose whether their fancier model actually beats a naive baseline",
+      "Manually eyeballing a trend line in Excel"
+    ],
+    "insight": "The honest finding — that a naive baseline actually beats the more sophisticated model on 2 of 3 indicators — is the real insight: near-random-walk series like FX punish overconfident modeling, and knowing which type of series you have matters more than which method you use.",
+    "solution": "A forecasting service that always runs a naive baseline and a more sophisticated method side by side via proper walk-forward backtesting, so the honestly-better method is what gets used, not the fancier-sounding one.",
+    "distribution": "A small API or dashboard a finance team checks periodically; source data refreshes from the live World Bank API rather than a static snapshot.",
+    "feedback": "Because both methods are backtested continuously as new data arrives, if a series' behavior changes, the walk-forward comparison would catch the baseline losing its edge and surface that shift automatically."
+  },
+  "techvista-consultancy": {
+    "problem": "Ansen Innovation had shipped five new client-facing features under deadline pressure with no documentation, leaving both its own developers and its client FCMA's staff without a reliable reference for how the new features worked.",
+    "targetUser": "Ansen's development team, which needed technical process diagrams, and FCMA's administrators and end-users, who needed plain-language guides — two distinct audiences from one engagement.",
+    "competitors": [
+      "No documentation at all — the actual starting point",
+      "A generic technical writer without a process-modeling background",
+      "Ansen handling it internally, the original plan that deadline pressure had already derailed"
+    ],
+    "insight": "The two audiences needed fundamentally different artifacts from the same underlying process knowledge — a developer needs a UML flowchart, an FCMA administrator needs a plain-language guide — so delivery had to be tailored per audience rather than one generic document for everyone.",
+    "solution": "Audience-specific documentation packs (developer, admin, end-user) built on a validated notation choice, tested for comprehension with real users before delivery — not just written and shipped. Full detail below.",
+    "distribution": "Delivered directly to Ansen as the client-facing artifact set, alongside a longer-term documentation strategy so future features wouldn't fall into the same undocumented gap.",
+    "feedback": "Two rounds of understandability testing were built into the process itself — round 1 validated the notation in isolation, round 2 tested the actual delivered diagrams, and round 1's findings directly simplified what shipped in round 2."
+  }
+};
+
+  var grid = document.getElementById('project-grid');
+  var backRow = document.getElementById('back-row');
+
+  function fieldListHTML(items) {
+    return '<ul>' + items.map(function (i) { return '<li>' + i + '</li>'; }).join('') + '</ul>';
+  }
+
+  // store each trigger button's original label so it can be restored on collapse
+  document.querySelectorAll('.case-trigger').forEach(function (btn) {
+    btn.dataset.label = btn.textContent;
+  });
+
+  function collapseProject() {
+    var expandedCard = grid.querySelector('.card.expanded');
+    if (expandedCard) {
+      var extra = expandedCard.querySelector('.card-expanded-content');
+      if (extra) extra.remove();
+      var narrativeWrap = expandedCard.querySelector('.card-narrative-content');
+      if (narrativeWrap) narrativeWrap.remove();
+      expandedCard.classList.remove('expanded');
+      var triggerBtn = expandedCard.querySelector('.case-trigger');
+      if (triggerBtn) triggerBtn.textContent = triggerBtn.dataset.label;
+    }
+    grid.classList.remove('expanded-mode');
+    backRow.hidden = true;
+  }
+
+  function expandProject(projectId, card) {
+    collapseProject();
+
+    var data = caseStudies[projectId];
+    if (!data) return;
+
+    var content = document.createElement('div');
+    content.className = 'card-expanded-content';
+    var html = '<hr class="divider">';
+    html += '<div class="case-block"><h4><span class="num">1</span>Target problem</h4><p>' + data.problem + '</p></div>';
+    html += '<div class="case-block"><h4><span class="num">2</span>Target user</h4><p>' + data.targetUser + '</p></div>';
+    html += '<div class="case-block"><h4><span class="num">3</span>Competitors &amp; alternatives</h4>' + fieldListHTML(data.competitors) + '</div>';
+    html += '<div class="case-block"><h4><span class="num">4</span>Key insight</h4><p>' + data.insight + '</p></div>';
+    html += '<div class="case-block"><h4><span class="num">5</span>The solution</h4><p>' + data.solution + '</p></div>';
+    html += '<div class="case-block"><h4><span class="num">6</span>Distribution</h4><p>' + data.distribution + '</p></div>';
+    html += '<div class="case-block"><h4><span class="num">7</span>Adapting to feedback</h4><p>' + data.feedback + '</p></div>';
+    content.innerHTML = html;
+    card.appendChild(content);
+
+    var narrativeTemplate = document.getElementById('narrative-' + projectId);
+    if (narrativeTemplate) {
+      var narrativeWrap = document.createElement('div');
+      narrativeWrap.className = 'card-narrative-content';
+      narrativeWrap.appendChild(narrativeTemplate.content.cloneNode(true));
+      card.appendChild(narrativeWrap);
+    }
+
+    card.classList.add('expanded');
+    grid.classList.add('expanded-mode');
+    backRow.hidden = false;
+
+    var triggerBtn = card.querySelector('.case-trigger');
+    if (triggerBtn) triggerBtn.textContent = 'Hide project content';
+
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  document.querySelectorAll('.case-trigger').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var projectId = btn.getAttribute('data-project');
+      var card = btn.closest('.card');
+      if (card.classList.contains('expanded')) {
+        collapseProject();
+      } else {
+        expandProject(projectId, card);
+      }
+    });
+  });
+
+  document.getElementById('back-to-projects-btn').addEventListener('click', collapseProject);
+
+  // --- Visitor gate: role + industry, shown one after the other ---
+  var gateOverlay = document.getElementById('gate-overlay');
+  var siteContent = document.getElementById('site-content');
+  var gateSkip = document.getElementById('gate-skip');
+  var roleStep = document.querySelector('.gate-step[data-step="role"]');
+  var industryStep = document.querySelector('.gate-step[data-step="industry"]');
+  var viewingAs = document.getElementById('viewing-as');
+  var viewingAsText = document.getElementById('viewing-as-text');
+  var sectionIntro = document.getElementById('section-intro');
+
+  var introByRole = {
+    Recruiter: 'Eleven projects spanning production GenAI & RAG, computer vision, big-data streaming, forecasting & optimization, classical ML, backend systems, and client-facing consulting. Each card opens into a short case study — problem, users, and how it was built — for a quick screen.',
+    Client: 'Eleven projects, each framed around a real problem and the people it serves. Click into any project to see the problem it solves, who it is for, how it reaches users, and how it improves over time — not just the tech stack.',
+    Other: 'Eleven projects spanning production GenAI & RAG, computer vision, big-data streaming, forecasting & optimization, classical ML, backend systems, and client-facing consulting — including a five-project smart-factory suite. Search or click the bar below to filter by project type, industry, skills, or impact.'
+  };
+
+  function applyIndustryFilter(industry) {
+    var chip = document.querySelector('.chip[data-group="industry"][data-value="' + industry + '"]');
+    if (chip) {
+      active.industry.add(industry);
+      chips.forEach(function (c) {
+        if (c.getAttribute('data-group') === 'industry' && c.getAttribute('data-value') === industry) {
+          c.setAttribute('aria-pressed', 'true');
+        }
+      });
+    }
+    applyFilters();
+  }
+
+  function finishGate(role, industry) {
+    gateOverlay.hidden = true;
+    siteContent.hidden = false;
+    document.body.style.overflow = '';
+
+    if (sectionIntro) sectionIntro.textContent = introByRole[role] || introByRole.Other;
+
+    if (industry && industry !== 'Other') {
+      applyIndustryFilter(industry);
+    }
+
+    if (viewingAs && viewingAsText) {
+      if (role === 'Other' && (!industry || industry === 'Other')) {
+        viewingAs.hidden = true;
+      } else {
+        var parts = [];
+        if (role && role !== 'Other') parts.push(role.toLowerCase());
+        if (industry && industry !== 'Other') parts.push(industry);
+        viewingAsText.textContent = 'Viewing as ' + (parts.length ? parts.join(' \u00b7 ') : 'a visitor') + '.';
+        viewingAs.hidden = false;
+      }
+    }
+
+    try { sessionStorage.setItem('gateRole', role); sessionStorage.setItem('gateIndustry', industry || ''); } catch (e) {}
+  }
+
+  var chosenRole = null;
+
+  document.querySelectorAll('.gate-options[data-question="role"] .gate-option').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      chosenRole = btn.getAttribute('data-value');
+      roleStep.hidden = true;
+      industryStep.hidden = false;
+    });
+  });
+
+  document.querySelectorAll('.gate-options[data-question="industry"] .gate-option').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      finishGate(chosenRole, btn.getAttribute('data-value'));
+    });
+  });
+
+  gateSkip.addEventListener('click', function () {
+    finishGate('Other', 'Other');
+  });
+
+  if (viewingAs) {
+    var viewingAsResetBtn = viewingAs.querySelector('button');
+    if (viewingAsResetBtn) {
+      viewingAsResetBtn.addEventListener('click', function () {
+        try { sessionStorage.removeItem('gateRole'); sessionStorage.removeItem('gateIndustry'); } catch (e) {}
+        clearAll();
+        if (sectionIntro) sectionIntro.textContent = introByRole.Other;
+        viewingAs.hidden = true;
+        gateOverlay.hidden = false;
+        siteContent.hidden = true;
+        roleStep.hidden = false;
+        industryStep.hidden = true;
+        chosenRole = null;
+        document.body.style.overflow = 'hidden';
+      });
+    }
+  }
+
+  // Skip the gate on repeat visits within the same browser session
+  try {
+    var savedRole = sessionStorage.getItem('gateRole');
+    var savedIndustry = sessionStorage.getItem('gateIndustry');
+    if (savedRole) {
+      finishGate(savedRole, savedIndustry);
+    } else {
+      document.body.style.overflow = 'hidden';
+    }
+  } catch (e) {
+    document.body.style.overflow = 'hidden';
+  }
 })();
 </script>
 
